@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 const { initWhatsApp, sendWhatsAppMessage, sendButtonMessage, getWhatsAppStatus, getLastQR } = require('./whatsapp');
 const { startBooking, processBookingResponse, getBookingState, saveConfirmedBooking, getServicesButtons, loadServices } = require('./booking');
@@ -18,6 +19,9 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Servir arquivos estáticos
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Preflight para CORS
 app.options('*', cors());
@@ -242,13 +246,9 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', whatsapp: getWhatsAppStatus() });
 });
 
-// Rota raiz para debug
+// Rota raiz - Servir interface
 app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Chatbot AgendMed rodando',
-    version: '1.0.0',
-    whatsapp: getWhatsAppStatus()
-  });
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Rota para registrar userId associado ao phoneNumber
