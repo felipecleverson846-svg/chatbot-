@@ -202,8 +202,8 @@ Digite o número da opção desejada.`;
       // Falar com atendente
       botResponse = `👨‍💼 *Falar com Atendente*\n\nUm atendente entrará em contato em breve!\n\nHorário de atendimento:\n📞 Segunda a Sexta: 08:00 - 18:00\n📞 Sábado: 08:00 - 12:00\n\nObrigado por entrar em contato! 😊`;
     } else {
-      // Resposta padrão
-      console.log('💬 Gerando resposta padrão...');
+      // Resposta padrão para qualquer mensagem não reconhecida
+      console.log('💬 Mensagem não reconhecida. Enviando menu padrão...');
       botResponse = `Desculpe, não entendi sua pergunta. 🤔
 
 Menu de opções:
@@ -226,12 +226,15 @@ Digite o número da opção desejada.`;
 
     // Enviar resposta via WhatsApp
     console.log(`📤 Enviando resposta para ${phoneNumber}...`);
+    console.log(`📝 Mensagem: ${botResponse.substring(0, 100)}...`);
     const result = await sendWhatsAppMessage(phoneNumber, botResponse);
     
     if (result.success) {
       console.log(`✅ Resposta enviada com sucesso para ${contactName}`);
     } else {
       console.error(`❌ Erro ao enviar resposta: ${result.error}`);
+      console.error(`📞 Telefone: ${phoneNumber}`);
+      console.error(`👤 Nome: ${contactName}`);
     }
   } catch (error) {
     console.error('❌ Erro ao processar mensagem:', error);

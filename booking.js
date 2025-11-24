@@ -18,8 +18,8 @@ let SERVICES = [];
 // Função para carregar serviços do banco de dados
 async function loadServices(userId) {
   try {
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-    const response = await fetch(`${frontendUrl}/api/chatbot/services?userId=${userId}`);
+    const config = require('./config');
+    const response = await fetch(config.getApiUrl(`/api/chatbot/services?userId=${userId}`));
     
     if (!response.ok) {
       console.error('Erro ao buscar serviços:', response.status);
@@ -39,8 +39,8 @@ async function loadServices(userId) {
 // Função para buscar horários disponíveis
 async function getAvailableSlots(userId, date, period) {
   try {
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-    const response = await fetch(`${frontendUrl}/api/schedule/get-appointments?userId=${userId}&date=${date}`);
+    const config = require('./config');
+    const response = await fetch(config.getApiUrl(`/api/schedule/get-appointments?userId=${userId}&date=${date}`));
     
     if (!response.ok) {
       console.error('Erro ao buscar horários:', response.status);
@@ -50,7 +50,7 @@ async function getAvailableSlots(userId, date, period) {
     const blockedTimes = await response.json();
     
     // Buscar horários do usuário
-    const userResponse = await fetch(`${frontendUrl}/api/chatbot/user-times?userId=${userId}`);
+    const userResponse = await fetch(config.getApiUrl(`/api/chatbot/user-times?userId=${userId}`));
     if (!userResponse.ok) {
       return [];
     }
